@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StartGame } from "./mancala/StartGame";
 import { Play } from "./mancala/Play";
-import { GameState } from "./mancala/gameState";
+import { GameState, Player } from "./mancala/gameState";
 
 export function App() {
 
@@ -28,6 +28,7 @@ export function App() {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
+                credentials: 'include',
                 body: JSON.stringify({ nameplayer1: playerOne , nameplayer2: playerTwo })
             });
     
@@ -41,11 +42,26 @@ export function App() {
         }
     }
 
+    async function doMove(player: Player, pitNumber: number){
+        if(player.hasTurn && pitNumber != 6 && pitNumber != 13){
+            const response = await fetch('api/play/' + pitNumber, {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json'
+                },
+                credentials: 'include'
+            });
+            const gameState = await response.json();
+            setGameState(gameState);
+        }
+
+    }
+
     if (!gameState) {
         return <StartGame onPlayersConfirmed={tryStartGame}
                           message={errorMessage}
         />
     }
 
-    return <Play gameState={gameState} />
+    return <Play gameState={gameState} doMove={doMove} />
 }
