@@ -28,7 +28,6 @@ export function App() {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                credentials: 'include',
                 body: JSON.stringify({ nameplayer1: playerOne , nameplayer2: playerTwo })
             });
     
@@ -48,8 +47,7 @@ export function App() {
                 method: 'PUT',
                 headers: {
                     'Accept': 'application/json'
-                },
-                credentials: 'include'
+                }
             });
             const gameState = await response.json();
             setGameState(gameState);
